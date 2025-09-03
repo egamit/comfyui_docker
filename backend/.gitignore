@@ -1,0 +1,16 @@
+__pycache__/
+*.py[cod]
+*$py.class
+.Python
+.venv/
+venv/
+ENV/
+.pytest_cache/
+.coverage
+.mypy_cache/
+.ruff_cache/
+.uv/
+uv.lock
+.env
+*.log
+.DS_Store
