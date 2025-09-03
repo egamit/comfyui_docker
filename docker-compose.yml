@@ -1,4 +1,29 @@
 services:
+  comfyui:
+    image: mmartial/comfyui-nvidia-docker:ubuntu24_cuda12.6.3-latest
+    # ↑ 50xx 系なら ubuntu24_cuda12.8-latest を選択（ドライバ 570 以上必須）
+    #   "latest" の指し先は変わるので、安定運用はタグ固定推奨
+    ports:
+      - "8188:8188"
+    volumes:
+      - ./comfy/run:/comfy/mnt
+      - ./comfy/basedir:/basedir
+      # （任意）設定ファイルを使う場合
+      # - ./comfy/config.sh:/comfyui-nvidia_config.sh:ro
+    environment:
+      WANTED_UID: "1000"        # 開発ユーザに合わせる（例：codespace/ローカルユーザ）
+      WANTED_GID: "1000"
+      BASE_DIRECTORY: "/basedir" # basedir を使う設計
+      SECURITY_LEVEL: "normal"   # Manager のセキュリティレベル
+      # （任意）COMFY_CMDLINE_EXTRA: "--listen 0.0.0.0 --port 8188"
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - capabilities: ["gpu"]
+    # Docker Compose v2 ならこれでもOK:
+    # gpus: all
+    restart: unless-stopped
 
   frontend:
     build:
